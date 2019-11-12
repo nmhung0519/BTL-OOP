@@ -19,11 +19,11 @@ public class AbstractTower extends GameTile {
 
     @Override
     public void update() {
-
+        this.setPosX(getPosX() + 10);
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    public void doDrawing(Graphics g) {
 
     }
 }

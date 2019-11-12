@@ -4,7 +4,7 @@ import drawer.Road.drawSpawner;
 
 import java.awt.*;
 
-public class Spawner extends GameTile {
+public class Spawner extends Road {
     public Spawner(int posX, int posY) {
         super(posX, posY);
     }
@@ -14,7 +14,7 @@ public class Spawner extends GameTile {
 
     }
     @Override
-    public void draw(Graphics2D g) {
+    public void doDrawing(Graphics g) {
         drawSpawner.draw(super.getPosX(), super.getPosY(), g);
     }
 }

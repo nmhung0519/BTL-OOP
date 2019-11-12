@@ -2,7 +2,7 @@ package entity.tile.Bullet;
 
 import entity.GameEntity;
 
-public abstract class AbstractBullet implements GameEntity {
+public abstract class AbstractBullet extends GameEntity {
     private double posX;
     private double posY;
     private int strength;

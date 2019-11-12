@@ -13,7 +13,7 @@ public class Mountain extends GameTile {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    public void doDrawing(Graphics g) {
 
     }
 }

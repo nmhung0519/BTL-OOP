@@ -4,27 +4,27 @@ import entity.GameEntity;
 
 import java.awt.*;
 
-public abstract class GameTile implements GameEntity {
-    private int posX;
-    private int posY;
+public abstract class GameTile extends GameEntity {
+    private Point point;
 
     public GameTile(int posX, int posY){
-        this.posX = posX;
-        this.posY = posY;
+        point = new Point(posX, posY);
     }
 
+    public Point getPoint() {
+        return this.point;
+    }
     public int getPosX() {
-        return this.posX;
+        return point.getPosX();
     }
     public void setPosX(int posX) {
-        this.posX = posX;
+        point.setPosX(posX);
     }
     public int getPosY() {
-        return this.posY;
+        return point.getPosY();
     }
     public void setPosY(int posY) {
-        this.posY = posY;
+        point.setPosY(posY);
     }
     public abstract void update();
-    public abstract void draw(Graphics2D g);
 }

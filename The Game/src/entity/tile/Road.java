@@ -13,7 +13,6 @@ public class Road extends GameTile {
 
     @Override
     public void update() {
-
     }
 
     public double getDistance() {
@@ -23,7 +22,7 @@ public class Road extends GameTile {
         this.distance = distance;
     }
     @Override
-    public void draw(Graphics2D g) {
+    public void doDrawing(Graphics g) {
         drawRoad.draw(super.getPosX(), super.getPosY(), g);
     }
 }

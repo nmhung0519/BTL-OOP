@@ -1,9 +1,19 @@
 package entity.tile.enemy;
 
 import Config.Config;
+import entity.tile.Road;
+import entity.tile.Point;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class SmallerEnemy extends AbstractEnemy {
-    public SmallerEnemy(int posX, int posY) {
-        super(posX, posY, Config.SMALLER_ENEMY_HEALTH, Config.SMALLER_ENEMY_ARMOR, Config.SMALLER_ENEMY_SPEED, Config.SMALLER_ENEMY_REWARD);
+    public SmallerEnemy(Point point, Point nextPoint) {
+        super(point, nextPoint, Config.SMALLER_ENEMY_HEALTH, Config.SMALLER_ENEMY_ARMOR, Config.SMALLER_ENEMY_SPEED, Config.SMALLER_ENEMY_REWARD);
     }
+
+    @Override
+    public void doDrawing(Graphics g) {
+
+    }
+
 }

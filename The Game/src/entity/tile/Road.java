@@ -23,6 +23,6 @@ public class Road extends GameTile {
     }
     @Override
     public void doDrawing(Graphics g) {
-        drawRoad.draw(super.getPosX(), super.getPosY(), g);
+        drawRoad.draw(super.getPosX() - 50, super.getPosY() - 50, g);
     }
 }

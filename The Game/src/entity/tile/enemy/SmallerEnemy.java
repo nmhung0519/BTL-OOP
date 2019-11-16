@@ -4,7 +4,7 @@ import Config.Config;
 import entity.tile.Road;
 import entity.tile.Point;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import drawer.Enemy.drawSmallerEnemy;
 
 public class SmallerEnemy extends AbstractEnemy {
     public SmallerEnemy(Point point, Point nextPoint) {
@@ -13,7 +13,8 @@ public class SmallerEnemy extends AbstractEnemy {
 
     @Override
     public void doDrawing(Graphics g) {
-
+        super.update();
+        drawSmallerEnemy.draw(this, g);
     }
 
 }

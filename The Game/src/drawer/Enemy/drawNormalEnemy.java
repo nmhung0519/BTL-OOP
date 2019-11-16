@@ -1,6 +1,7 @@
 package drawer.Enemy;
 
 import drawer.drawEntity;
+import entity.tile.enemy.NormalEnemy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +11,9 @@ import javax.swing.Timer;
 
 
 public class drawNormalEnemy extends JPanel implements drawEntity {
-    public static void draw(int posX, int posY, Graphics g) {
+    public static void draw(NormalEnemy enemy, Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setPaint(Color.yellow);
-        g2d.fillOval(posX, posY, 60, 60);
+        g2d.fillOval(enemy.getPosX() - 30, enemy.getPosY() - 30, 60, 60);
     }
-
 }

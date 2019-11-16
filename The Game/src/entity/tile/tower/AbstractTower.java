@@ -1,29 +1,33 @@
 package entity.tile.tower;
 
+import entity.tile.Bullet.AbstractBullet;
 import entity.tile.GameTile;
+import entity.tile.Point;
+import entity.tile.enemy.AbstractEnemy;
 
 import java.awt.*;
 
-public class AbstractTower extends GameTile {
+public abstract class AbstractTower extends GameTile {
     private int speed;
     private double range;
     public AbstractTower(int posX, int posY, double range, int speed) {
         super(posX, posY);
         this.range = range;
         this.speed = speed;
-        doDraw();
     }
-    private void doDraw() {
-
-    }
-
     @Override
     public void update() {
         this.setPosX(getPosX() + 10);
     }
-
     @Override
-    public void doDrawing(Graphics g) {
-
+    public abstract void doDrawing(Graphics g);
+    public boolean inDistance(Point point) {
+        double distance = Math.sqrt((double) (Math.pow(this.getPosX() - point.getPosX(), 2) + Math.pow(this.getPosY() - point.getPosY(), 2)));
+        if (distance <= range) return true;
+        else return false;
     }
+    public double getRange() {
+        return this.range;
+    }
+    public abstract AbstractBullet spawnBullet(AbstractEnemy enemy);
 }

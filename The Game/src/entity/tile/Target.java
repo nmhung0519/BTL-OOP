@@ -17,6 +17,6 @@ public class Target extends Road {
     }
     @Override
     public void doDrawing(Graphics g) {
-        drawTarget.draw(super.getPosX(), super.getPosY(), g);
+        drawTarget.draw(super.getPosX() - 50, super.getPosY() - 50, g);
     }
 }

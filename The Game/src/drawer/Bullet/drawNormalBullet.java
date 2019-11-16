@@ -1,12 +1,15 @@
 package drawer.Bullet;
 
 import drawer.drawEntity;
+import entity.tile.Point;
 
 import java.awt.*;
 
 public class drawNormalBullet implements drawEntity {
-    public void draw(int posX, int posY, Graphics2D g) {
-        g.setPaint(Color.blue);
-        g.fillOval(posX, posY, 12, 12);
+    public static void draw(Point point, Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setPaint(Color.blue);
+        g2d.fillOval(point.getPosX(), point.getPosY(), 10, 10);
     }
+
 }

@@ -34,4 +34,8 @@ public class Point {
         }
         return false;
     }
+    public void set(java.awt.Point other) {
+        posX = other.x;
+        posY = other. y;
+    }
 }

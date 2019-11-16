@@ -10,6 +10,9 @@ public abstract class GameTile extends GameEntity {
     public GameTile(int posX, int posY){
         point = new Point(posX, posY);
     }
+    public GameTile(Point point) {
+        this.point = new Point(point.getPosX(), point.getPosY());
+    }
 
     public Point getPoint() {
         return this.point;

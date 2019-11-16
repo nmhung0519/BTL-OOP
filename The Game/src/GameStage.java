@@ -19,18 +19,13 @@ import entity.tile.Point;
 public class GameStage {
     private Spawner spawer;
     private Target target;
-    private List<AbstractEnemy> enemies;
     private Road[] roads;
-    public GameStage(Spawner spawner, Target target, Road[] roads, List<AbstractEnemy> enemies) {
+    public GameStage(Spawner spawner, Target target, Road[] roads) {
         this.spawer = spawner;
         this.target = target;
-        this.enemies = enemies;
         this.roads = roads;
     }
 
-    public List<AbstractEnemy> getEnimies() {
-        return this.enemies;
-    }
     public Spawner getSpawer() {
         return this.spawer;
     }
@@ -62,24 +57,8 @@ public class GameStage {
                 posY = scanner.nextInt();
                 Target target = new Target(posX, posY);
                 roads[numOfRoads - 1] = target;
-                int num = scanner.nextInt();
-                for (int i = 0; i < num; i++) {
-                    enemies.add(new NormalEnemy(new Point(spawner.getPosX(), spawner.getPosY()), new Point(spawner.getPosX() , spawner.getPosY())));
-                }
-                num = scanner.nextInt();
-                for (int i = 0; i < num; i++) {
-                    enemies.add(new SmallerEnemy(new Point(spawner.getPosX(), spawner.getPosY()), new Point(spawner.getPosX() , spawner.getPosY())));
-                }
-                num = scanner.nextInt();
-                for (int i = 0; i < num; i++) {
-                    enemies.add(new TankerEnemy(new Point(spawner.getPosX(), spawner.getPosY()), new Point(spawner.getPosX() , spawner.getPosY())));
-                }
-                num = scanner.nextInt();
-                for (int i = 0; i < num; i++) {
-                    enemies.add(new BossEnemy(new Point(spawner.getPosX(), spawner.getPosY()), new Point(spawner.getPosX() , spawner.getPosY())));
-                }
                 scanner.close();
-                return new GameStage(spawner, target, roads,  enemies);
+                return new GameStage(spawner, target, roads);
             } catch (Exception e) {
                 System.out.println(" - " + e);
             }

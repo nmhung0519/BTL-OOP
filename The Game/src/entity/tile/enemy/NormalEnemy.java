@@ -2,14 +2,9 @@ package entity.tile.enemy;
 
 import Config.Config;
 import drawer.Enemy.*;
-import entity.tile.Road;
-
-import javax.swing.*;
-import java.awt.event.ActionListener;
 
 import java.awt.*;
 import entity.tile.Point;
-import java.awt.event.ActionEvent;
 
 public class NormalEnemy extends AbstractEnemy {
 
@@ -18,6 +13,6 @@ public class NormalEnemy extends AbstractEnemy {
     }
     public void doDrawing(Graphics g) {
         super.update();
-        drawNormalEnemy.draw(super.getPosX(), super.getPosY(), g);
+        drawNormalEnemy.draw(this, g);
     }
 }

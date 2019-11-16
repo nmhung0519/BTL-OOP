@@ -57,4 +57,15 @@ public abstract class AbstractEnemy extends GameTile {
     public int getReward() {
         return this.reward;
     }
+    public boolean outDistance() {
+        return false;
+    }
+    public void degreeHP(int n) {
+        System.out.println(n - armor);
+        health -= (n - armor);
+    }
+    public boolean life() {
+        if (health > 0) return true;
+        else return false;
+    }
 }

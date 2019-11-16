@@ -1,6 +1,7 @@
 package entity.tile.enemy;
 
 import Config.Config;
+import drawer.Enemy.drawTankerEnemy;
 import entity.tile.Point;
 
 import java.awt.*;
@@ -13,7 +14,8 @@ public class TankerEnemy extends AbstractEnemy {
 
     @Override
     public void doDrawing(Graphics g) {
-
+        super.update();
+        drawTankerEnemy.draw(this, g);
     }
 
 }

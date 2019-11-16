@@ -2,15 +2,15 @@ package Config;
 
 public final class Config {
     public static final int NORMAL_BULLET_TTL = 40;
-    public static final int NORMAL_BULLET_STRENGTH = 30;
+    public static final int NORMAL_BULLET_STRENGTH = 18;
     public static final int NORMAL_BULLET_SPEED = 8;
 
     public static final int MACHINE_GUN_BULLET_TTL = 15;
-    public static final int MACHINE_GUN_BULLET_STRENGTH = 20;
+    public static final int MACHINE_GUN_BULLET_STRENGTH = 12;
     public static final int MACHINE_GUN_BULLET_SPEED = 18;
 
     public static final int SNIPER_BULLET_TTL = 80;
-    public static final int SNIPER_BULLET_STRENGTH = 50;
+    public static final int SNIPER_BULLET_STRENGTH = 30;
     public static final int SNIPER_BULLET_SPEED = 11;
 
     public static final int ROAD_SIZE = 100;

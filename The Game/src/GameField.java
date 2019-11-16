@@ -125,9 +125,11 @@ class Surface extends JPanel implements ActionListener{
         Graphics2D g2d = (Graphics2D) g;
         g2d.setPaint(Color.gray);
         g2d.fillRect(970, 0, 200, 80);
+        g2d.fillRect(830, 0, 110, 80);
         g2d.setPaint(Color.BLACK);
         g2d.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         g2d.drawString("REWARD: " + REWARD, 980, 48);
+        g2d.drawString("HP: " + HP, 840, 48);
         g2d.drawLine(0, 850, 1200, 850);
         drawNormalTower.draw(new Point(200, 920), g2d);
         drawMachineGunTower.draw(new Point(600, 920), g2d);
@@ -141,18 +143,18 @@ class Surface extends JPanel implements ActionListener{
             enemies.add(new SmallerEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint())));
         }
         if (count % 200 == 0) {
-            NormalEnemy tmp = new NormalEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint()));
+            TankerEnemy tmp = new TankerEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint()));
             enemies.add(tmp);
 
         }
         for (AbstractTower tower : towers) {
-            if (count % 50 == 0)
+            if (tower.canShoot())
                 for (AbstractEnemy enemy : enemies) {
-                     if (tower.inDistance(enemy.getPoint())) {
+                    if (tower.inDistance(enemy.getPoint())) {
                         bullets.add(tower.spawnBullet(enemy));
                         break;
-                     }
-            }
+                    }
+                }
             tower.doDrawing(g);
         }
         for (AbstractBullet bullet : bullets) {

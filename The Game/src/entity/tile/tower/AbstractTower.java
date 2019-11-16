@@ -10,10 +10,12 @@ import java.awt.*;
 public abstract class AbstractTower extends GameTile {
     private int speed;
     private double range;
+    private int count;
     public AbstractTower(int posX, int posY, double range, int speed) {
         super(posX, posY);
         this.range = range;
         this.speed = speed;
+        count = 1;
     }
     @Override
     public void update() {
@@ -30,4 +32,12 @@ public abstract class AbstractTower extends GameTile {
         return this.range;
     }
     public abstract AbstractBullet spawnBullet(AbstractEnemy enemy);
+    public boolean canShoot() {
+        count--;
+        if (count == 0) {
+            count = speed;
+            return true;
+        }
+        return false;
+    }
 }

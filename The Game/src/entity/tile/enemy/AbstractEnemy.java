@@ -68,4 +68,7 @@ public abstract class AbstractEnemy extends GameTile {
         if (health > 0) return true;
         else return false;
     }
+    public int getHealth() {
+        return this.health;
+    }
 }

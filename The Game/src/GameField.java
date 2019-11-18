@@ -64,7 +64,7 @@ class Surface extends JPanel implements ActionListener{
         count = 0;
         type = 1;
         map = new int[12][12];
-        trangThai = 1;
+        trangThai = 0;
         for (int i = 0; i < 12; i++)
             for (int j = 0; j < 12; j++) map[i][j] = 0;
         try {
@@ -88,23 +88,29 @@ class Surface extends JPanel implements ActionListener{
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (check(e.getX(), e.getY()) == 0) {
-                    point.setPosX((e.getX() / 100) * 100 + 50);
-                    point.setPosY((e.getY() / 100) * 100 + 50);
-                    if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == 0) {
-                        if (spawnTower == 1) towers.add(new NormalTower(point.getPosX(), point.getPosY()));
-                        else if (spawnTower == 2) towers.add(new MachineGunTower(point.getPosX(), point.getPosY()));
-                        else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
-                        REWARD -= spawnTower;
-                        spawnTower = 0;
-                        map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 1;
+                if (trangThai == 0) {
+                    if (e.getX() >= 400 && e.getX() <= 700 && e.getY() >= 400 && e.getY() <= 500) {
+                        trangThai = 1;
+                        repaint();
                     }
-                }
-                else {
-                    int tmp = check(e.getX(), e.getY());
-                    if (spawnTower == tmp) spawnTower = 0;
-                    else if (REWARD >= tmp) {
-                        spawnTower = tmp;
+                } else if (trangThai == 1) {
+                    if (check(e.getX(), e.getY()) == 0) {
+                        point.setPosX((e.getX() / 100) * 100 + 50);
+                        point.setPosY((e.getY() / 100) * 100 + 50);
+                        if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == 0) {
+                            if (spawnTower == 1) towers.add(new NormalTower(point.getPosX(), point.getPosY()));
+                            else if (spawnTower == 2) towers.add(new MachineGunTower(point.getPosX(), point.getPosY()));
+                            else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
+                            REWARD -= spawnTower;
+                            spawnTower = 0;
+                            map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 1;
+                        }
+                    } else {
+                        int tmp = check(e.getX(), e.getY());
+                        if (spawnTower == tmp) spawnTower = 0;
+                        else if (REWARD >= tmp) {
+                            spawnTower = tmp;
+                        }
                     }
                 }
             }
@@ -144,8 +150,15 @@ class Surface extends JPanel implements ActionListener{
         return null;
     }
     private void doDrawing(Graphics g) {
-        if (trangThai == 1) {
-            Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
+        if (trangThai == 0) {
+            g2d.setPaint(Color.green);
+            g2d.fillRect(400, 400, 300, 100);
+            g2d.setPaint(Color.red);
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+            g2d.drawString("New Game", 450, 460);
+        }
+        else if (trangThai == 1) {
             g2d.setPaint(Color.gray);
             g2d.fillRect(970, 0, 200, 80);
             g2d.fillRect(830, 0, 110, 80);
@@ -186,6 +199,7 @@ class Surface extends JPanel implements ActionListener{
                     }
                 } else {
                     if (enemies.isEmpty()) {
+                        repaint();
                         trangThai = 2;
                     }
                 }
@@ -214,6 +228,10 @@ class Surface extends JPanel implements ActionListener{
                         Point tmp = nextPoint(enemy.getNextPoint());
                         if (tmp == null) {
                             HP--;
+                            if (HP == 0) {
+                                repaint();
+                                trangThai = 3;
+                            }
                             enemies.remove(enemy);
                             life = false;
                         } else enemy.setNextPoint(tmp);
@@ -245,12 +263,11 @@ class Surface extends JPanel implements ActionListener{
         super.paintComponent(g);
         doDrawing(g);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (trangThai == 1) {
-            count ++;
             repaint();
+            count++;
         }
     }
 }
@@ -261,42 +278,16 @@ public class GameField extends JFrame {
     }
     private void initUI() throws FileNotFoundException {
         // Đường link đến file
-        JButton begin = new JButton("New Game");
-        begin.setSize(600, 400);
-        begin.setLocation(300, 300);
-        add(begin);
-        begin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final Surface surface;
-                try {
-                    surface = new Surface(GameStage.load("C:\\Users\\ASUS\\IdeaProjects\\The Game\\src\\demo.txt"));
-                    add(surface);
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                remove(begin);
-                repaint();
-                revalidate();
-            }
-        });
+        final Surface surface = new Surface(GameStage.load("C:\\Users\\ASUS\\IdeaProjects\\The Game\\src\\demo.txt"));
+        add(surface);
         setTitle("Tower Defense");
         setBackground(Color.green);
         setSize(1200, 1200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    public void endGame(Surface surface) {
-        remove(surface);
-        //EndGame end = new EndGame();
-        //add(end);
-        //setTitle("Tower Defense");
-        //setBackground(Color.green);
-        //setSize(1200, 1200);
-        //setLocationRelativeTo(null);
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
     public static void main(String[] args) throws FileNotFoundException {
+        new GameField();
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

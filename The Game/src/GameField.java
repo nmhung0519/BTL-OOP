@@ -1,7 +1,4 @@
 import Config.Config;
-import entity.GameEntity;
-import entity.tile.GameTile;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,20 +16,8 @@ import entity.tile.enemy.*;
 import entity.tile.tower.*;
 import entity.tile.Point;
 import java.awt.Font;
+import drawer.Road.*;
 
-class EndGame extends JPanel {
-    public void doDrawing(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-        g2d.drawString("You win", 500, 500);
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        doDrawing(g);
-    }
-}
 class Surface extends JPanel implements ActionListener{
     private GameStage gameStage;
     private int HP;
@@ -103,7 +88,7 @@ class Surface extends JPanel implements ActionListener{
                             else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
                             REWARD -= spawnTower;
                             spawnTower = 0;
-                            map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 1;
+                            map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 2;
                         }
                     } else {
                         int tmp = check(e.getX(), e.getY());
@@ -138,7 +123,7 @@ class Surface extends JPanel implements ActionListener{
         initTimer();
     }
     private void initTimer() {
-        Timer timer = new Timer(8, this);
+        Timer timer = new Timer(15, this);
         timer.start();
     }
     public Point nextPoint(Point p) {
@@ -159,6 +144,14 @@ class Surface extends JPanel implements ActionListener{
             g2d.drawString("New Game", 450, 460);
         }
         else if (trangThai == 1) {
+            gameStage.getSpawer().doDrawing(g2d);
+            gameStage.getTarget().doDrawing(g2d);
+            for (int i = 0; i < 12; i++) {
+                for (int j = 0; j < 12; j++) {
+                    if (map[i][j] == 1) drawRoad.draw(i*100, j*100, g2d);
+                    else drawGrass.draw(i*100, j*100, g2d);
+                }
+            }
             g2d.setPaint(Color.gray);
             g2d.fillRect(970, 0, 200, 80);
             g2d.fillRect(830, 0, 110, 80);
@@ -170,11 +163,6 @@ class Surface extends JPanel implements ActionListener{
             drawNormalTower.draw(new Point(200, 920), g2d);
             drawMachineGunTower.draw(new Point(600, 920), g2d);
             drawSniperTower.draw(new Point(1000, 920), g2d);
-            gameStage.getSpawer().doDrawing(g2d);
-            gameStage.getTarget().doDrawing(g2d);
-            for (Road road : gameStage.getRoads()) {
-                road.doDrawing(g);
-            }
             try {
                 if (type != 0) {
                     if (num == 0) {
@@ -199,8 +187,9 @@ class Surface extends JPanel implements ActionListener{
                     }
                 } else {
                     if (enemies.isEmpty()) {
-                        repaint();
                         trangThai = 2;
+                        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+                        g2d.drawString("Congratulation! You Win!", 300, 300);
                     }
                 }
             } catch (Exception e) {
@@ -229,8 +218,10 @@ class Surface extends JPanel implements ActionListener{
                         if (tmp == null) {
                             HP--;
                             if (HP == 0) {
-                                repaint();
                                 trangThai = 3;
+                                g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+                                g2d.drawString("Game Over", 400, 400);
+                                break;
                             }
                             enemies.remove(enemy);
                             life = false;
@@ -256,14 +247,6 @@ class Surface extends JPanel implements ActionListener{
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.SNIPER_TOWER_RANGE, point.getPosY() - Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_RANGE * 2, Config.SNIPER_TOWER_RANGE * 2);
             }
-        }
-        else if (trangThai == 2) {
-            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-            g2d.drawString("Congratulation! You Win!", 300, 300);
-        }
-        else {
-            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-            g2d.drawString("Game Over", 400, 400);
         }
     }
     @Override

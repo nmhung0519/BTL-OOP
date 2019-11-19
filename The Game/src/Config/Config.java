@@ -10,7 +10,7 @@ public final class Config {
     public static final int MACHINE_GUN_BULLET_SPEED = 18;
 
     public static final int SNIPER_BULLET_TTL = 80;
-    public static final int SNIPER_BULLET_STRENGTH = 25;
+    public static final int SNIPER_BULLET_STRENGTH = 35;
     public static final int SNIPER_BULLET_SPEED = 11;
 
     public static final int ROAD_SIZE = 100;
@@ -35,12 +35,12 @@ public final class Config {
     public static final int BOSS_ENEMY_SPEED = 1;
     public static final int BOSS_ENEMY_REWARD = 10;
 
-    public static final int NORMAL_TOWER_SPEED = 30;
+    public static final int NORMAL_TOWER_SPEED = 20;
     public static final int NORMAL_TOWER_RANGE = 330;
 
-    public static final int MACHINEGUN_TOWER_SPEED = 5;
+    public static final int MACHINEGUN_TOWER_SPEED = 10;
     public static final int MACHINEGUN_TOWER_RANGE = 280;
 
-    public static final int SNIPER_TOWER_SPEED = 60;
+    public static final int SNIPER_TOWER_SPEED = 40;
     public static final int SNIPER_TOWER_RANGE = 400;
 }

@@ -257,6 +257,14 @@ class Surface extends JPanel implements ActionListener{
                 g2d.drawOval(point.getPosX() - Config.SNIPER_TOWER_RANGE, point.getPosY() - Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_RANGE * 2, Config.SNIPER_TOWER_RANGE * 2);
             }
         }
+        else if (trangThai == 2) {
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+            g2d.drawString("Congratulation! You Win!", 300, 300);
+        }
+        else {
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+            g2d.drawString("Game Over", 400, 400);
+        }
     }
     @Override
     public void paintComponent(Graphics g) {

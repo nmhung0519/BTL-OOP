@@ -6,7 +6,8 @@ import entity.tile.Point;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
+import javax.swing.*;
+import drawer.drawEnemy;
 
 
 public abstract class AbstractEnemy extends GameTile {
@@ -16,15 +17,22 @@ public abstract class AbstractEnemy extends GameTile {
     private int reward;
     private boolean alive;
     private Point nextPoint;
+    private int distance;
+    private int maxHealth;
+    private Image img;
 
-    public AbstractEnemy(Point point, Point nextPoint, int health, int armor, int speed, int reward) {
+    public AbstractEnemy(String imgPath, Point point, Point nextPoint, int health, int armor, int speed, int reward) {
         super(point.getPosX(), point.getPosY());
         this.nextPoint = nextPoint;
         this.health = health;
+        this.maxHealth = health;
         this.armor = armor;
         this.speed = speed;
         this.reward = reward;
         this.alive = true;
+        this.distance = 0;
+        img = new ImageIcon(imgPath).getImage();
+
     }
 
     public Point getNextPoint() {
@@ -49,8 +57,12 @@ public abstract class AbstractEnemy extends GameTile {
         if (super.getPosY() > nextPoint.getPosY()) {
             super.setPosY(super.getPosY() - speed);
         }
+        distance += speed;
     }
-    public abstract void doDrawing(Graphics g) ;
+    public void doDrawing(Graphics g) {
+        update();
+        drawEnemy.draw(img, this, g);
+    }
     public boolean getAlive() {
         return this.alive;
     }
@@ -68,7 +80,13 @@ public abstract class AbstractEnemy extends GameTile {
         if (health > 0) return true;
         else return false;
     }
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
     public int getHealth() {
         return this.health;
+    }
+    public int getDistance() {
+        return this.distance;
     }
 }

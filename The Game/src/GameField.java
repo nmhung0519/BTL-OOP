@@ -1,13 +1,17 @@
 import Config.Config;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.awt.*;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import Effect.AbstractEffect;
 import drawer.Tower.*;
 import entity.tile.*;
 import entity.tile.enemy.AbstractEnemy;
@@ -35,16 +39,20 @@ class Surface extends JPanel implements ActionListener{
     private int countSpawn;
     private int[][] map;
     private int trangThai;
+    private Point point0;
+    private List<AbstractEffect> effects;
 
     public Surface(GameStage gameStage) throws FileNotFoundException {
         this.gameStage = gameStage;
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         towers = new ArrayList<>();
+        effects = new ArrayList<>();
         point = new Point(600, 600);
+        point0 = new Point(0 ,0);
         spawnTower = 0;
         num = 0;
-        HP = 5;
+        HP = 1;
         REWARD = 8;
         count = 0;
         type = 1;
@@ -80,15 +88,18 @@ class Surface extends JPanel implements ActionListener{
                     }
                 } else if (trangThai == 1) {
                     if (check(e.getX(), e.getY()) == 0) {
-                        point.setPosX((e.getX() / 100) * 100 + 50);
-                        point.setPosY((e.getY() / 100) * 100 + 50);
-                        if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == 0) {
-                            if (spawnTower == 1) towers.add(new NormalTower(point.getPosX(), point.getPosY()));
-                            else if (spawnTower == 2) towers.add(new MachineGunTower(point.getPosX(), point.getPosY()));
-                            else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
-                            REWARD -= spawnTower;
-                            spawnTower = 0;
-                            map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 2;
+                        if (e.getY() < 800) {
+                            point.setPosX((e.getX() / 100) * 100 + 50);
+                            point.setPosY((e.getY() / 100) * 100 + 50);
+                            if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == 0) {
+                                if (spawnTower == 1) towers.add(new NormalTower(point.getPosX(), point.getPosY()));
+                                else if (spawnTower == 2)
+                                    towers.add(new MachineGunTower(point.getPosX(), point.getPosY()));
+                                else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
+                                REWARD -= spawnTower;
+                                spawnTower = 0;
+                                map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 2;
+                            }
                         }
                     } else {
                         int tmp = check(e.getX(), e.getY());
@@ -113,6 +124,7 @@ class Surface extends JPanel implements ActionListener{
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
+                point0.set(e.getPoint());
                 if (e.getY() >= 850) point.set(e.getPoint());
                 else {
                     point.setPosX((e.getX() / 100) * 100 + 50);
@@ -123,7 +135,7 @@ class Surface extends JPanel implements ActionListener{
         initTimer();
     }
     private void initTimer() {
-        Timer timer = new Timer(15, this);
+        Timer timer = new Timer(20, this);
         timer.start();
     }
     public Point nextPoint(Point p) {
@@ -134,8 +146,16 @@ class Surface extends JPanel implements ActionListener{
         }
         return null;
     }
-    private void doDrawing(Graphics g) {
+    private void doDrawing(Graphics g) throws IOException {
         Graphics2D g2d = (Graphics2D) g;
+        gameStage.getSpawer().doDrawing(g2d);
+        gameStage.getTarget().doDrawing(g2d);
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
+                if (map[i][j] == 1) drawRoad.draw(i*100, j*100, g2d);
+                else drawGrass.draw(i*100, j*100, g2d);
+            }
+        }
         if (trangThai == 0) {
             g2d.setPaint(Color.green);
             g2d.fillRect(400, 400, 300, 100);
@@ -144,14 +164,6 @@ class Surface extends JPanel implements ActionListener{
             g2d.drawString("New Game", 450, 460);
         }
         else if (trangThai == 1) {
-            gameStage.getSpawer().doDrawing(g2d);
-            gameStage.getTarget().doDrawing(g2d);
-            for (int i = 0; i < 12; i++) {
-                for (int j = 0; j < 12; j++) {
-                    if (map[i][j] == 1) drawRoad.draw(i*100, j*100, g2d);
-                    else drawGrass.draw(i*100, j*100, g2d);
-                }
-            }
             g2d.setPaint(Color.gray);
             g2d.fillRect(970, 0, 200, 80);
             g2d.fillRect(830, 0, 110, 80);
@@ -196,13 +208,10 @@ class Surface extends JPanel implements ActionListener{
                 System.out.println(" - " + e);
             }
             for (AbstractTower tower : towers) {
-                if (tower.canShoot())
-                    for (AbstractEnemy enemy : enemies) {
-                        if (tower.inDistance(enemy.getPoint())) {
-                            bullets.add(tower.spawnBullet(enemy));
-                            break;
-                        }
-                    }
+                if (tower.canShoot()) {
+                    AbstractEnemy tmp = tower.targetEnemy(enemies);
+                    if (tmp != null) bullets.add(tower.spawnBullet(tmp));
+                }
                 tower.doDrawing(g);
             }
             for (AbstractBullet bullet : bullets) {
@@ -219,8 +228,18 @@ class Surface extends JPanel implements ActionListener{
                             HP--;
                             if (HP == 0) {
                                 trangThai = 3;
-                                g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-                                g2d.drawString("Game Over", 400, 400);
+                                JLabel endGame = new JLabel("Game Over");
+                                endGame.setLayout(null);
+                                BufferedImage img = ImageIO.read(new File("out/production/Picture/Game Over.png"));
+                                img.getScaledInstance(400, 100, Image.SCALE_SMOOTH);
+                                ImageIcon icon = new ImageIcon(img);
+                                endGame.setIcon(icon);
+                                endGame.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+                                endGame.setBounds(400, 400, 400, 100);
+                                endGame.setSize(400, 100);
+                                endGame.setText("Game Over");
+                                endGame.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+                                add(endGame);
                                 break;
                             }
                             enemies.remove(enemy);
@@ -247,19 +266,22 @@ class Surface extends JPanel implements ActionListener{
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.SNIPER_TOWER_RANGE, point.getPosY() - Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_RANGE * 2, Config.SNIPER_TOWER_RANGE * 2);
             }
+            g2d.drawString(point0.getPosX() + " - " + point0.getPosY(), point0.getPosX(), point0.getPosY());
         }
     }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        doDrawing(g);
+        try {
+            doDrawing(g);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (trangThai == 1) {
-            repaint();
-            count++;
-        }
+        if (trangThai == 1) count++;
+        repaint();
     }
 }
 

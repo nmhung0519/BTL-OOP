@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class drawRoad implements drawEntity {
     public static void draw(int posX, int posY, Graphics g) {
         Graphics g2d = (Graphics2D) g;
-        Image img = new ImageIcon("C:\\Users\\ASUS\\IdeaProjects\\The Game\\out\\production\\Picture\\Map\\Road.png").getImage();
+        Image img = new ImageIcon("out/production/Picture/Map/Road.png").getImage();
         g2d.drawImage(img, posX, posY, null);
     }
 }

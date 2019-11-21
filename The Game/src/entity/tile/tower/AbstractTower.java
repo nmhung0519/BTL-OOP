@@ -6,6 +6,7 @@ import entity.tile.Point;
 import entity.tile.enemy.AbstractEnemy;
 
 import java.awt.*;
+import java.util.List;
 
 public abstract class AbstractTower extends GameTile {
     private int speed;
@@ -27,6 +28,18 @@ public abstract class AbstractTower extends GameTile {
         double distance = Math.sqrt((double) (Math.pow(this.getPosX() - point.getPosX(), 2) + Math.pow(this.getPosY() - point.getPosY(), 2)));
         if (distance <= range) return true;
         else return false;
+    }
+    public AbstractEnemy targetEnemy(List<AbstractEnemy> enemies) {
+        AbstractEnemy result = null;
+        for (AbstractEnemy enemy : enemies) {
+            if (inDistance(enemy.getPoint())) {
+                if (result == null) result = enemy;
+                else {
+                    if (result.getDistance() < enemy.getDistance()) result = enemy;
+                }
+            }
+        }
+        return result;
     }
     public double getRange() {
         return this.range;

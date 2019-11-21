@@ -1,7 +1,7 @@
 package Config;
 
 public final class Config {
-    public static final int NORMAL_BULLET_TTL = 40;
+    public static final int NORMAL_BULLET_TTL = 45;
     public static final int NORMAL_BULLET_STRENGTH = 18;
     public static final int NORMAL_BULLET_SPEED = 8;
 

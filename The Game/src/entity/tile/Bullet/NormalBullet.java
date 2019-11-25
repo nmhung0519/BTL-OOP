@@ -11,10 +11,10 @@ import entity.tile.tower.AbstractTower;
 public class NormalBullet extends AbstractBullet {
 
     public NormalBullet(Point point, AbstractEnemy enemy) {
-        super(point, enemy, Config.NORMAL_BULLET_STRENGTH, Config.NORMAL_BULLET_SPEED, Config.NORMAL_BULLET_TTL);
+        super("out/production/Picture/Bullet/NormalBullet.png", point, enemy, Config.NORMAL_BULLET_STRENGTH, Config.NORMAL_BULLET_SPEED, Config.NORMAL_BULLET_TTL);
     }
     public void doDrawing(Graphics g) {
         super.update();
-        drawNormalBullet.draw(getPoint(), g);
+        drawNormalBullet.draw(getImg(), this, g);
     }
 }

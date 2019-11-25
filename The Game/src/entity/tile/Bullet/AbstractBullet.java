@@ -6,15 +6,20 @@ import entity.tile.Point;
 import entity.tile.enemy.AbstractEnemy;
 import entity.tile.tower.AbstractTower;
 
+import javax.swing.*;
+import java.awt.*;
+
 public abstract class AbstractBullet extends GameTile {
     private AbstractEnemy enemy;
     private int strength;
     private double speed;
     private int count;
     private int TTL;
+    private Image img;
 
-    public AbstractBullet(Point point, AbstractEnemy enemy, int strength, double speed, int TTL) {
+    public AbstractBullet(String path, Point point, AbstractEnemy enemy, int strength, double speed, int TTL) {
         super(point);
+        img = new ImageIcon(path).getImage();
         this.enemy = enemy;
         this.count = 0;
         this.speed = speed;
@@ -47,5 +52,8 @@ public abstract class AbstractBullet extends GameTile {
     }
     public AbstractEnemy getEnemy() {
         return this.enemy;
+    }
+    public Image getImg() {
+        return this.img;
     }
 }

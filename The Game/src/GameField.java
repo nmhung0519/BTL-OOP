@@ -37,7 +37,7 @@ class Surface extends JPanel implements ActionListener{
     private File text;
     private Scanner scanner;
     private int countSpawn;
-    private int[][] map;
+    private GameTile[][] map;
     private int trangThai;
     private Point point0;
     private List<AbstractEffect> effects;
@@ -56,10 +56,10 @@ class Surface extends JPanel implements ActionListener{
         REWARD = 8;
         count = 0;
         type = 1;
-        map = new int[12][12];
+        map = new GameTile[12][12];
         trangThai = 0;
         for (int i = 0; i < 12; i++)
-            for (int j = 0; j < 12; j++) map[i][j] = 0;
+            for (int j = 0; j < 12; j++) map[i][j] = null;
         try {
             File text = new File("C:\\Users\\ASUS\\IdeaProjects\\The Game\\src\\Enemy.txt");
             scanner = new Scanner(text);
@@ -67,7 +67,7 @@ class Surface extends JPanel implements ActionListener{
             System.out.println(" + " + e);
         }
         for (Road road : gameStage.getRoads()) {
-            map[(road.getPosX() - 50) / 100][(road.getPosY() - 50) / 100] = 1;
+            map[(road.getPosX() - 50) / 100][(road.getPosY() - 50) / 100] = road;
         }
         addMouseListener(new MouseAdapter() {
             public int check(int x, int y) {
@@ -91,14 +91,16 @@ class Surface extends JPanel implements ActionListener{
                         if (e.getY() < 800) {
                             point.setPosX((e.getX() / 100) * 100 + 50);
                             point.setPosY((e.getY() / 100) * 100 + 50);
-                            if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == 0) {
-                                if (spawnTower == 1) towers.add(new NormalTower(point.getPosX(), point.getPosY()));
+                            if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == null) {
+                                AbstractTower tower = null;
+                                if (spawnTower == 1) tower = new NormalTower(point.getPosX(), point.getPosY());
                                 else if (spawnTower == 2)
-                                    towers.add(new MachineGunTower(point.getPosX(), point.getPosY()));
-                                else if (spawnTower == 3) towers.add(new SniperTower(point.getPosX(), point.getPosY()));
+                                    tower = new MachineGunTower(point.getPosX(), point.getPosY());
+                                else if (spawnTower == 3) tower = new SniperTower(point.getPosX(), point.getPosY());
+                                if (tower != null) towers.add(tower);
                                 REWARD -= spawnTower;
                                 spawnTower = 0;
-                                map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = 2;
+                                map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = tower;
                             }
                         }
                     } else {
@@ -152,7 +154,7 @@ class Surface extends JPanel implements ActionListener{
         gameStage.getTarget().doDrawing(g2d);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
-                if (map[i][j] == 1) drawRoad.draw(i*100, j*100, g2d);
+                if (map[i][j] instanceof Road) drawRoad.draw(i*100, j*100, g2d);
                 else drawGrass.draw(i*100, j*100, g2d);
             }
         }
@@ -172,7 +174,7 @@ class Surface extends JPanel implements ActionListener{
             g2d.drawString("REWARD: " + REWARD, 980, 48);
             g2d.drawString("HP: " + HP, 840, 48);
             g2d.drawLine(0, 850, 1200, 850);
-            drawNormalTower.draw(new Point(200, 920), g2d);
+            drawNormalTower.draw(new Point(200, 920),  null, g2d);
             drawMachineGunTower.draw(new Point(600, 920), g2d);
             drawSniperTower.draw(new Point(1000, 920), g2d);
             try {
@@ -254,7 +256,7 @@ class Surface extends JPanel implements ActionListener{
                 }
             }
             if (spawnTower == 1) {
-                drawNormalTower.draw(point, g2d);
+                drawNormalTower.draw(point, null, g2d);
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.NORMAL_TOWER_RANGE, point.getPosY() - Config.NORMAL_TOWER_RANGE, Config.NORMAL_TOWER_RANGE * 2, Config.NORMAL_TOWER_RANGE * 2);
             } else if (spawnTower == 2) {

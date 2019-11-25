@@ -15,7 +15,7 @@ public class NormalTower extends AbstractTower {
 
     @Override
     public void doDrawing(Graphics g) {
-        drawNormalTower.draw(this.getPoint(), (Graphics2D) g);
+        drawNormalTower.draw(this.getPoint(), super.getTarget(), (Graphics2D) g);
     }
 
     public AbstractBullet spawnBullet(AbstractEnemy enemy) {

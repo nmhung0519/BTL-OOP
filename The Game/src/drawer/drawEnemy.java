@@ -14,6 +14,7 @@ public class drawEnemy {
         g2d.setPaint(Color.BLACK);
         g2d.drawRect(enemy.getPosX() - 40, enemy.getPosY() - 45, 80, 5);
         int width = img.getWidth(null);
+
         g2d.drawImage(img, enemy.getPosX() - width/2, enemy.getPosY() - width/2, null);
     }
 }

@@ -10,7 +10,7 @@ import entity.tile.tower.MachineGunTower;
 
 public class MachineGunBullet extends AbstractBullet {
     public MachineGunBullet(Point point, AbstractEnemy enemy) {
-        super(point, enemy, Config.MACHINE_GUN_BULLET_STRENGTH, Config.MACHINE_GUN_BULLET_SPEED, Config.MACHINE_GUN_BULLET_TTL);
+        super("out/production/Picture/Bullet/MachineGunBullet.png", point, enemy, Config.MACHINE_GUN_BULLET_STRENGTH, Config.MACHINE_GUN_BULLET_SPEED, Config.MACHINE_GUN_BULLET_TTL);
     }
 
     @Override

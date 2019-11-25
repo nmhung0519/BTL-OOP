@@ -12,15 +12,16 @@ public abstract class AbstractTower extends GameTile {
     private int speed;
     private double range;
     private int count;
+    private AbstractEnemy target;
     public AbstractTower(int posX, int posY, double range, int speed) {
         super(posX, posY);
+        target = null;
         this.range = range;
         this.speed = speed;
         count = 1;
     }
     @Override
     public void update() {
-        this.setPosX(getPosX() + 10);
     }
     @Override
     public abstract void doDrawing(Graphics g);
@@ -39,6 +40,7 @@ public abstract class AbstractTower extends GameTile {
                 }
             }
         }
+        target = result;
         return result;
     }
     public double getRange() {
@@ -52,5 +54,8 @@ public abstract class AbstractTower extends GameTile {
             return true;
         }
         return false;
+    }
+    public AbstractEnemy getTarget() {
+        return target;
     }
 }

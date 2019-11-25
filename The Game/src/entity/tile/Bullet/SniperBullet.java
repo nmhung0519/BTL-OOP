@@ -9,7 +9,7 @@ import entity.tile.tower.AbstractTower;
 
 public class SniperBullet extends AbstractBullet {
     public SniperBullet(Point point, AbstractEnemy enemy) {
-        super(point, enemy, Config.SNIPER_BULLET_STRENGTH, Config.SNIPER_BULLET_SPEED, Config.SNIPER_BULLET_TTL);
+        super("out/production/Picture/Bullet/SniperBullet.png", point, enemy, Config.SNIPER_BULLET_STRENGTH, Config.SNIPER_BULLET_SPEED, Config.SNIPER_BULLET_TTL);
     }
 
     @Override

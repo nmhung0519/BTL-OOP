@@ -1,5 +1,8 @@
 package Config;
 
+import javax.swing.*;
+import java.awt.*;
+
 public final class Config {
     public static final int NORMAL_BULLET_TTL = 45;
     public static final int NORMAL_BULLET_STRENGTH = 18;
@@ -43,4 +46,13 @@ public final class Config {
 
     public static final int SNIPER_TOWER_SPEED = 40;
     public static final int SNIPER_TOWER_RANGE = 400;
+
+    public static final Image[] SMOKE = new Image[5];
+    static {
+        SMOKE[1] = new ImageIcon("out/production/Picture/Effect/Smoke1.png").getImage();
+        SMOKE[2] = new ImageIcon("out/production/Picture/Effect/Smoke2.png").getImage();
+        SMOKE[3] = new ImageIcon("out/production/Picture/Effect/Smoke3.png").getImage();
+        SMOKE[4] = new ImageIcon("out/production/Picture/Effect/Smoke4.png").getImage();
+        SMOKE[5] = new ImageIcon("out/production/Picture/Effect/Smoke5.png").getImage();
+    }
 }

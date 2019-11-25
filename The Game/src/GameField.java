@@ -12,15 +12,16 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 import Effect.AbstractEffect;
-import drawer.Tower.*;
+import Effect.Smoke;
 import entity.tile.*;
 import entity.tile.enemy.AbstractEnemy;
 import entity.tile.Bullet.*;
 import entity.tile.enemy.*;
-import entity.tile.tower.*;
+import entity.tile.*;
 import entity.tile.Point;
 import java.awt.Font;
 import drawer.Road.*;
+import drawer.drawTower;
 
 class Surface extends JPanel implements ActionListener{
     private GameStage gameStage;
@@ -29,7 +30,7 @@ class Surface extends JPanel implements ActionListener{
     private int count;
     private List<AbstractEnemy> enemies;
     private List<AbstractBullet> bullets;
-    private List<AbstractTower> towers;
+    private List<Tower> towers;
     private Point point;
     private int spawnTower;
     private int type;
@@ -41,6 +42,7 @@ class Surface extends JPanel implements ActionListener{
     private int trangThai;
     private Point point0;
     private List<AbstractEffect> effects;
+    private Image normalTower, machineGunTower, sniperTower, normalTower_Gun, machineGunTower_Gun, sniperTower_Gun;
 
     public Surface(GameStage gameStage) throws FileNotFoundException {
         this.gameStage = gameStage;
@@ -56,6 +58,12 @@ class Surface extends JPanel implements ActionListener{
         REWARD = 8;
         count = 0;
         type = 1;
+        normalTower = new ImageIcon("out/production/Picture/Tower/NormalTower.png").getImage();
+        normalTower_Gun = new ImageIcon("out/production/Picture/Tower/NormalTower_Gun.png").getImage();
+        machineGunTower = new ImageIcon("out/production/Picture/Tower/MachineGunTower.png").getImage();
+        machineGunTower_Gun = new ImageIcon("out/production/Picture/Tower.MachineGunTower_Gun.png").getImage();
+        sniperTower = new ImageIcon("out/production/Picture/Tower/SniperTower.png").getImage();
+        sniperTower_Gun = new ImageIcon("out/production/Picture/Tower/SniperTower_Gun.png").getImage();
         map = new GameTile[12][12];
         trangThai = 0;
         for (int i = 0; i < 12; i++)
@@ -92,15 +100,22 @@ class Surface extends JPanel implements ActionListener{
                             point.setPosX((e.getX() / 100) * 100 + 50);
                             point.setPosY((e.getY() / 100) * 100 + 50);
                             if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == null) {
-                                AbstractTower tower = null;
-                                if (spawnTower == 1) tower = new NormalTower(point.getPosX(), point.getPosY());
+                                 Tower tower = null;
+                                if (spawnTower == 1) tower = new Tower(normalTower, normalTower_Gun, point.getPosX(), point.getPosY(), Config.NORMAL_TOWER_RANGE, Config.NORMAL_TOWER_SPEED) ;
                                 else if (spawnTower == 2)
-                                    tower = new MachineGunTower(point.getPosX(), point.getPosY());
-                                else if (spawnTower == 3) tower = new SniperTower(point.getPosX(), point.getPosY());
+                                    tower = new Tower(machineGunTower, machineGunTower_Gun, point.getPosX(), point.getPosY(), Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_SPEED);
+                                else if (spawnTower == 3) tower = new Tower(sniperTower, sniperTower_Gun, point.getPosX(), point.getPosY(), Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_SPEED);
                                 if (tower != null) towers.add(tower);
                                 REWARD -= spawnTower;
                                 spawnTower = 0;
                                 map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = tower;
+                            }
+                            else {
+                                if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] instanceof Tower) {
+                                    Tower tmp = (Tower) map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100];
+                                    towers.remove(tmp);
+                                    map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] = null;
+                                }
                             }
                         }
                     } else {
@@ -137,7 +152,7 @@ class Surface extends JPanel implements ActionListener{
         initTimer();
     }
     private void initTimer() {
-        Timer timer = new Timer(20, this);
+        Timer timer = new Timer(30, this);
         timer.start();
     }
     public Point nextPoint(Point p) {
@@ -174,9 +189,9 @@ class Surface extends JPanel implements ActionListener{
             g2d.drawString("REWARD: " + REWARD, 980, 48);
             g2d.drawString("HP: " + HP, 840, 48);
             g2d.drawLine(0, 850, 1200, 850);
-            drawNormalTower.draw(new Point(200, 920),  null, g2d);
-            drawMachineGunTower.draw(new Point(600, 920), g2d);
-            drawSniperTower.draw(new Point(1000, 920), g2d);
+            drawTower.draw(normalTower, normalTower_Gun, new Point(200, 920), null, g);
+            drawTower.draw(machineGunTower, machineGunTower_Gun, new Point(600, 920), null, g);
+            drawTower.draw(sniperTower, sniperTower_Gun, new Point(1000, 920), null, g);
             try {
                 if (type != 0) {
                     if (num == 0) {
@@ -209,17 +224,21 @@ class Surface extends JPanel implements ActionListener{
             } catch (Exception e) {
                 System.out.println(" - " + e);
             }
-            for (AbstractTower tower : towers) {
+            for (AbstractBullet bullet : bullets) {
+                bullet.doDrawing(g);
+                bullet.Catch();
+                if (!bullet.life()) bullets.remove(bullet);
+            }
+            for (Tower tower : towers) {
                 if (tower.canShoot()) {
                     AbstractEnemy tmp = tower.targetEnemy(enemies);
                     if (tmp != null) bullets.add(tower.spawnBullet(tmp));
                 }
                 tower.doDrawing(g);
             }
-            for (AbstractBullet bullet : bullets) {
-                bullet.doDrawing(g);
-                bullet.Catch();
-                if (!bullet.life()) bullets.remove(bullet);
+            for (AbstractEffect effect : effects) {
+                if (effect.life()) effect.doDrawing(g);
+                else effects.remove(effect);
             }
             for (AbstractEnemy enemy : enemies) {
                 boolean life = enemy.life();
@@ -252,19 +271,20 @@ class Surface extends JPanel implements ActionListener{
                 } else {
                     REWARD += enemy.getReward();
                     if (REWARD > 99) REWARD = 99;
+                    effects.add(new Smoke(enemy.getPoint()));
                     enemies.remove(enemy);
                 }
             }
             if (spawnTower == 1) {
-                drawNormalTower.draw(point, null, g2d);
+                drawTower.draw(normalTower, normalTower_Gun, point, null, g);
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.NORMAL_TOWER_RANGE, point.getPosY() - Config.NORMAL_TOWER_RANGE, Config.NORMAL_TOWER_RANGE * 2, Config.NORMAL_TOWER_RANGE * 2);
             } else if (spawnTower == 2) {
-                drawMachineGunTower.draw(point, g2d);
+                drawTower.draw(machineGunTower, machineGunTower_Gun, point, null, g);
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.MACHINEGUN_TOWER_RANGE, point.getPosY() - Config.MACHINEGUN_TOWER_RANGE, Config.MACHINEGUN_TOWER_RANGE * 2, Config.MACHINEGUN_TOWER_RANGE * 2);
             } else if (spawnTower == 3) {
-                drawSniperTower.draw(point, g2d);
+                drawTower.draw(sniperTower, sniperTower_Gun, point, null, g);
                 g2d.setPaint(Color.red);
                 g2d.drawOval(point.getPosX() - Config.SNIPER_TOWER_RANGE, point.getPosY() - Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_RANGE * 2, Config.SNIPER_TOWER_RANGE * 2);
             }

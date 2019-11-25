@@ -4,9 +4,8 @@ import Config.Config;
 
 import java.awt.*;
 import entity.tile.Point;
-import drawer.Bullet.*;
 import entity.tile.enemy.AbstractEnemy;
-import entity.tile.tower.AbstractTower;
+import drawer.drawBullet;
 
 public class NormalBullet extends AbstractBullet {
 
@@ -15,6 +14,6 @@ public class NormalBullet extends AbstractBullet {
     }
     public void doDrawing(Graphics g) {
         super.update();
-        drawNormalBullet.draw(getImg(), this, g);
+        drawBullet.draw(this, g);
     }
 }

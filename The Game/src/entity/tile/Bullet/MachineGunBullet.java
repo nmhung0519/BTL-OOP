@@ -1,12 +1,10 @@
 package entity.tile.Bullet;
 
 import Config.Config;
+import drawer.drawBullet;
 import entity.tile.enemy.AbstractEnemy;
-import entity.tile.tower.AbstractTower;
 import entity.tile.Point;
 import java.awt.*;
-import drawer.Bullet.*;
-import entity.tile.tower.MachineGunTower;
 
 public class MachineGunBullet extends AbstractBullet {
     public MachineGunBullet(Point point, AbstractEnemy enemy) {
@@ -16,6 +14,6 @@ public class MachineGunBullet extends AbstractBullet {
     @Override
     public void doDrawing(Graphics g) {
         super.update();
-        drawMachineGunBullet.draw(getPosX(), getPosY(), g);
+        drawBullet.draw(this, g);
     }
 }

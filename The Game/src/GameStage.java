@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import entity.tile.enemy.*;
-import entity.tile.tower.MachineGunTower;
-import entity.tile.tower.NormalTower;
-import entity.tile.tower.SniperTower;
 import entity.tile.Point;
 
 public class GameStage {

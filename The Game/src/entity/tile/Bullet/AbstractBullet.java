@@ -4,10 +4,10 @@ import entity.GameEntity;
 import entity.tile.GameTile;
 import entity.tile.Point;
 import entity.tile.enemy.AbstractEnemy;
-import entity.tile.tower.AbstractTower;
 
 import javax.swing.*;
 import java.awt.*;
+import drawer.drawBullet;
 
 public abstract class AbstractBullet extends GameTile {
     private AbstractEnemy enemy;
@@ -55,5 +55,8 @@ public abstract class AbstractBullet extends GameTile {
     }
     public Image getImg() {
         return this.img;
+    }
+    public void doDrawing(Graphics g) {
+        drawBullet.draw(this, g);
     }
 }

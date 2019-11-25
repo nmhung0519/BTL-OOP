@@ -5,12 +5,13 @@ import entity.tile.Point;
 import java.awt.*;
 
 public abstract class AbstractEffect {
+    protected int count;
     private Point point ;
-    private int count;
 
     public AbstractEffect(Point point, int count) {
         this.point = new Point(point);
         this.count = count;
+        for (int i = 0; i < count; i++);
     }
     public Point getPoint() {
         return this.point;
@@ -31,8 +32,8 @@ public abstract class AbstractEffect {
         count --;
     }
     public boolean life() {
-        if (count > 0) return true;
+        if (count > 3) return true;
         else return false;
     }
-    public abstract void doDrawing(Point point, Graphics g) ;
+    public abstract void doDrawing(Graphics g) ;
 }

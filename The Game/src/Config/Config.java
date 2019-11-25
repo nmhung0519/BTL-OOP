@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Config {
+    public static final Image NORMAL_BULLET_IMAGE = new ImageIcon("out/production/Picture/Bullet/NormalBullet.png").getImage();
+    public static final Image MACHINEGUN_BULLET_IMAGE = new ImageIcon("out/production/Picture/MachineGunBullet.png").getImage();
+    public static final Image SNIPER_BULLET_IMAGE = new ImageIcon("out/production/Picture/Bullet/SniperBullet.png").getImage();
+
     public static final int NORMAL_BULLET_TTL = 45;
     public static final int NORMAL_BULLET_STRENGTH = 18;
     public static final int NORMAL_BULLET_SPEED = 8;

@@ -1,13 +1,12 @@
 package drawer;
 
-import entity.tile.enemy.AbstractEnemy;
 import entity.tile.*;
 
 import java.awt.*;
 import entity.tile.Point;
 
 public class drawTower {
-    public static void draw(Image img, Image gun, Point point, AbstractEnemy enemy, Graphics g) {
+    public static void draw(Image img, Image gun, Point point, Enemy enemy, Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         int x = 1;
         int y = 0;

@@ -1,17 +1,10 @@
-import entity.tile.GameTile;
-import entity.tile.Road;
-import entity.tile.Spawner;
-import entity.tile.Target;
-import entity.tile.enemy.AbstractEnemy;
-import entity.tile.enemy.NormalEnemy;
+import entity.tile.*;
 
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import entity.tile.enemy.*;
-import entity.tile.Point;
 
 public class GameStage {
     private Spawner spawer;
@@ -33,7 +26,7 @@ public class GameStage {
         return this.roads;
     }
     public static GameStage load(String path) {
-        List<AbstractEnemy> enemies = new ArrayList<>();
+        List<Enemy> enemies = new ArrayList<>();
         Road[] roads;
         try {
             File text = new File(path);

@@ -1,24 +1,19 @@
 package entity.tile;
 
-import entity.tile.Bullet.AbstractBullet;
-import entity.tile.Bullet.NormalBullet;
-import entity.tile.GameTile;
-import entity.tile.Point;
-import entity.tile.enemy.AbstractEnemy;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import drawer.drawTower;
 
 public class Tower extends GameTile {
+    private int type;
     private int speed;
     private double range;
     private int count;
-    private AbstractEnemy target;
+    private Enemy target;
     protected Image tower, gun;
-    public Tower(Image tower, Image gun, int posX, int posY, double range, int speed) {
+    public Tower(int type, Image tower, Image gun, int posX, int posY, double range, int speed) {
         super(posX, posY);
+        this.type = type;
         target = null;
         this.range = range;
         this.speed = speed;
@@ -39,9 +34,9 @@ public class Tower extends GameTile {
         if (distance <= range) return true;
         else return false;
     }
-    public AbstractEnemy targetEnemy(List<AbstractEnemy> enemies) {
-        AbstractEnemy result = null;
-        for (AbstractEnemy enemy : enemies) {
+    public Enemy targetEnemy(List<Enemy> enemies) {
+        Enemy result = null;
+        for (Enemy enemy : enemies) {
             if (inDistance(enemy.getPoint())) {
                 if (result == null) result = enemy;
                 else {
@@ -54,9 +49,6 @@ public class Tower extends GameTile {
     }
     public double getRange() {
         return this.range;
-    }
-    public AbstractBullet spawnBullet(AbstractEnemy enemy) {
-        return new NormalBullet(getPoint(), enemy);
     }
     public boolean canShoot() {
         count--;
@@ -72,7 +64,10 @@ public class Tower extends GameTile {
     public Image getImage() {
         return tower;
     }
-    public AbstractEnemy getTarget() {
+    public Enemy getTarget() {
         return target;
+    }
+    public int getType() {
+        return type;
     }
 }

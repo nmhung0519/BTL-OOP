@@ -1,11 +1,11 @@
 package drawer;
 
-import entity.tile.Bullet.AbstractBullet;
+import entity.tile.Bullet;
 
 import java.awt.*;
 
 public class drawBullet {
-    public static void draw(AbstractBullet bullet, Graphics g) {
+    public static void draw(Bullet bullet, Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         int x = bullet.getEnemy().getPosX() - bullet.getPosX();
         int y = bullet.getEnemy().getPosY() - bullet.getPosY();

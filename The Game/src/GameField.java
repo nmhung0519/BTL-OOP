@@ -14,9 +14,7 @@ import javax.swing.Timer;
 import Effect.AbstractEffect;
 import Effect.Smoke;
 import entity.tile.*;
-import entity.tile.enemy.AbstractEnemy;
 import entity.tile.Bullet.*;
-import entity.tile.enemy.*;
 import entity.tile.*;
 import entity.tile.Point;
 import java.awt.Font;
@@ -28,8 +26,8 @@ class Surface extends JPanel implements ActionListener{
     private int HP;
     private int REWARD;
     private int count;
-    private List<AbstractEnemy> enemies;
-    private List<AbstractBullet> bullets;
+    private List<Enemy> enemies;
+    private List<Bullet> bullets;
     private List<Tower> towers;
     private Point point;
     private int spawnTower;
@@ -43,6 +41,8 @@ class Surface extends JPanel implements ActionListener{
     private Point point0;
     private List<AbstractEffect> effects;
     private Image normalTower, machineGunTower, sniperTower, normalTower_Gun, machineGunTower_Gun, sniperTower_Gun;
+    private Image[] enemyImg;
+    private Image[] bulletImg;
 
     public Surface(GameStage gameStage) throws FileNotFoundException {
         this.gameStage = gameStage;
@@ -58,6 +58,15 @@ class Surface extends JPanel implements ActionListener{
         REWARD = 8;
         count = 0;
         type = 1;
+        enemyImg = new Image[4];
+        bulletImg = new Image[3];
+        bulletImg[0] = new ImageIcon("out/production/Picture/Bullet/NormalBullet.png").getImage();
+        bulletImg[1] = new ImageIcon("out/production/Picture/Bullet/MachineGunBullet.png").getImage();
+        bulletImg[2] = new ImageIcon("out/production/Picture/Bullet/SniperBullet.png").getImage();
+        enemyImg[0] = new ImageIcon("out/production/Picture/Enemy/NormalEnemy.png").getImage();
+        enemyImg[1] = new ImageIcon("out/production/Picture/Enemy/SmallerEnemy.png").getImage();
+        enemyImg[2] = new ImageIcon("out/production/Picture/Enemy/TankerEnemy.png").getImage();
+        enemyImg[3] = new ImageIcon("out/production/Picture/Enemy/BossEnemy.png").getImage();
         normalTower = new ImageIcon("out/production/Picture/Tower/NormalTower.png").getImage();
         normalTower_Gun = new ImageIcon("out/production/Picture/Tower/NormalTower_Gun.png").getImage();
         machineGunTower = new ImageIcon("out/production/Picture/Tower/MachineGunTower.png").getImage();
@@ -101,10 +110,10 @@ class Surface extends JPanel implements ActionListener{
                             point.setPosY((e.getY() / 100) * 100 + 50);
                             if (map[(point.getPosX() - 50) / 100][(point.getPosY() - 50) / 100] == null) {
                                  Tower tower = null;
-                                if (spawnTower == 1) tower = new Tower(normalTower, normalTower_Gun, point.getPosX(), point.getPosY(), Config.NORMAL_TOWER_RANGE, Config.NORMAL_TOWER_SPEED) ;
+                                if (spawnTower == 1) tower = new Tower(1, normalTower, normalTower_Gun, point.getPosX(), point.getPosY(), Config.NORMAL_TOWER_RANGE, Config.NORMAL_TOWER_SPEED) ;
                                 else if (spawnTower == 2)
-                                    tower = new Tower(machineGunTower, machineGunTower_Gun, point.getPosX(), point.getPosY(), Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_SPEED);
-                                else if (spawnTower == 3) tower = new Tower(sniperTower, sniperTower_Gun, point.getPosX(), point.getPosY(), Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_SPEED);
+                                    tower = new Tower(2, machineGunTower, machineGunTower_Gun, point.getPosX(), point.getPosY(), Config.MACHINEGUN_TOWER_RANGE, Config.MACHINEGUN_TOWER_SPEED);
+                                else if (spawnTower == 3) tower = new Tower(3, sniperTower, sniperTower_Gun, point.getPosX(), point.getPosY(), Config.SNIPER_TOWER_RANGE, Config.SNIPER_TOWER_SPEED);
                                 if (tower != null) towers.add(tower);
                                 REWARD -= spawnTower;
                                 spawnTower = 0;
@@ -202,16 +211,9 @@ class Surface extends JPanel implements ActionListener{
                             countSpawn = scanner.nextInt();
                         }
                     }
-                    if (type != 0) if (count == countSpawn) {
+                    if (type >= 0) if (count == countSpawn) {
                         count = 0;
-                        if (type == 1)
-                            enemies.add(new NormalEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint())));
-                        else if (type == 2)
-                            enemies.add(new SmallerEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint())));
-                        else if (type == 3)
-                            enemies.add(new TankerEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint())));
-                        else if (type == 4)
-                            enemies.add(new BossEnemy(new Point(gameStage.getSpawer().getPoint()), new Point(gameStage.getRoads()[1].getPoint())));
+                        if (type <= 4) enemies.add(new Enemy(type, enemyImg[type-1], gameStage.getSpawer().getPoint(), gameStage.getRoads()[1].getPoint()));
                         num--;
                     }
                 } else {
@@ -224,15 +226,15 @@ class Surface extends JPanel implements ActionListener{
             } catch (Exception e) {
                 System.out.println(" - " + e);
             }
-            for (AbstractBullet bullet : bullets) {
+            for (Bullet bullet : bullets) {
                 bullet.doDrawing(g);
                 bullet.Catch();
                 if (!bullet.life()) bullets.remove(bullet);
             }
             for (Tower tower : towers) {
                 if (tower.canShoot()) {
-                    AbstractEnemy tmp = tower.targetEnemy(enemies);
-                    if (tmp != null) bullets.add(tower.spawnBullet(tmp));
+                    Enemy tmp = tower.targetEnemy(enemies);
+                    if (tmp != null) bullets.add(new Bullet(tower.getType(), bulletImg[tower.getType()-1], tower.getPoint(), tmp));
                 }
                 tower.doDrawing(g);
             }
@@ -240,7 +242,7 @@ class Surface extends JPanel implements ActionListener{
                 if (effect.life()) effect.doDrawing(g);
                 else effects.remove(effect);
             }
-            for (AbstractEnemy enemy : enemies) {
+            for (Enemy enemy : enemies) {
                 boolean life = enemy.life();
                 if (life) {
                     if (enemy.getPoint().equals(enemy.getNextPoint())) {
